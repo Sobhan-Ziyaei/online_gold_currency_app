@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -11,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       theme: ThemeData(
         textTheme: const TextTheme(
           headlineLarge: TextStyle(
@@ -28,6 +31,11 @@ class MyApp extends StatelessWidget {
             color: Colors.black,
             fontFamily: 'sm',
             fontSize: 13,
+          ),
+          displaySmall: TextStyle(
+            color: Colors.black,
+            fontFamily: 'sm',
+            fontSize: 14,
           ),
           bodyMedium: TextStyle(
             color: Colors.white,
@@ -119,6 +127,7 @@ class HomePage extends StatelessWidget {
               height: 20,
             ),
             Container(
+              width: double.infinity,
               height: 34,
               decoration: const BoxDecoration(
                 color: Color(0xff828282),
@@ -143,10 +152,122 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
+            SizedBox(
+              height: 350,
+              width: double.infinity,
+              child: ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemCount: 20,
+                itemBuilder: (context, position) {
+                  return const MainItemList();
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  if (index % 10 == 0) {
+                    return const AdvertismentItem();
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+class AdvertismentItem extends StatelessWidget {
+  const AdvertismentItem({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        width: double.infinity,
+        height: 54,
+        decoration: const BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.all(
+            Radius.circular(1000),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 1.0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              'تبلیغات',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MainItemList extends StatelessWidget {
+  const MainItemList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Container(
+        width: double.infinity,
+        height: 54,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(
+            Radius.circular(1000),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 1.0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              'دلار',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            Text(
+              '27000',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            Text(
+              '-2',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        // etc.
+      };
 }
